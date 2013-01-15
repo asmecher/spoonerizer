@@ -1,0 +1,4 @@
+spoonerizer
+===========
+
+Spoonerizer: generate spoonerisms.
