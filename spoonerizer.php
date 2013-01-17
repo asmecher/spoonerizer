@@ -17,7 +17,7 @@
  *
  * Spoonerizer uses the Festival speech synthesizer to turn words into a series
  * of segments representing their pronunciations. (These are cached in the
- * spoonerizer.cache file, so if you have that cache, festival itself is not
+ * spoonerizer.cache.php file, so if you have that cache, festival itself is not
  * required, though you'll have to disable the code below that runs it.)
  *
  * Spoonerism candidates are identified by switching one or several of the
@@ -81,10 +81,12 @@ function getSegments($pipes, $text) {
 
 $stderr = fopen('php://stderr', 'w');
 
+define('CACHE_FILENAME', 'spoonerizer.cache.php');
+
 // Get segments for all words, cached if available.
-if (file_exists('spoonerizer.cache')) {
+if (file_exists(CACHE_FILENAME)) {
 	fputs($stderr, 'Loading cache... ');
-	$words = unserialize(file_get_contents('spoonerizer.cache'));
+	$words = require(CACHE_FILENAME);
 	fputs($stderr, "Done.\n");
 } else {
 	$words = array();
@@ -106,7 +108,7 @@ fputs($stderr, " Done.\n");
 // Save cache
 if ($cacheInvalid) {
 	fputs($stderr, 'Saving cache... ');
-	file_put_contents('spoonerizer.cache', serialize($words));
+	file_put_contents(CACHE_FILENAME, '<?php return ' . var_export($words, true) . ';');
 	fputs($stderr, "Done.\n");
 }
 
