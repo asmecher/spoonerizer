@@ -149,6 +149,10 @@ function spoonerize($segments1, $segments2, $words, $wordsCollapsedInverted) {
 			array_slice($segments1, 0, $pattern[1]),
 			array_slice($segments2, $pattern[0])
 		);
+
+		// If we've got the same words as a result, don't count them.
+		if ($hypothetical1 == $segments2 && $hypothetical2 == $segments1) continue;
+
 		$hypothetical1Collapsed = implode(' ', $hypothetical1);
 		$hypothetical2Collapsed = implode(' ', $hypothetical2);
 		if (	isset($wordsCollapsedInverted[$hypothetical1Collapsed]) &&
