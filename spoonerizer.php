@@ -58,7 +58,10 @@ stream_set_blocking($pipes[0], 0);
  * @return array ("segment1", "segment2", "segment3", ...)
  */
 function getSegments($pipes, $text) {
-	fprintf($pipes[0], '(utt.save (utt.synth (Utterance Text "%s")) "-")' . "\n", $text);
+	// Festival sometimes doesn't like unpronounceables.
+	if (!preg_match('/[a-zA-Z]/', $text)) return array();
+
+	fprintf($pipes[0], '(utt.save (utt.synth (Utterance Text "%s")) "-")' . "\n", str_replace('"', ' ', $text));
 	$segments = array();
 	do {
 		$line = fgets($pipes[1]);
